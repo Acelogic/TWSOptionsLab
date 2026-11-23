@@ -20,13 +20,15 @@ Build an options spread with quotes from Interactive Brokers Trader Workstation,
 
 ## Visual tour
 
-These screenshots show the running app with synthetic quotes and fills.
+The animation and screenshots show the running app with synthetic quotes and fills.
 
 ### Follow a spread from today to expiration
 
 This SPX butterfly buys the 4,900 and 5,100 calls and sells two 5,000 calls. The solid curve shows modeled P&L on the selected date. The dotted line shows the payoff at expiration. Drag **Date** to watch the curves converge, or adjust **Range** and **Implied Volatility** to explore another scenario.
 
-![SPX long call butterfly on the strike rail, with a modeled payoff curve, expiration payoff, breakevens, and date and volatility sliders](docs/payoff-graph.png)
+![The Date slider moves from Now to expiration over 39 simulated days. The SPX butterfly’s rounded P&L curve rises into the triangular expiration payoff, peaking at $8,497 at 5,000.](docs/spx-date-slider.gif)
+
+[View a still image of the full strategy builder](docs/payoff-graph.png)
 
 <details>
 <summary><strong>Inspect the 5,000 call</strong></summary>
