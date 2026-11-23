@@ -1,0 +1,205 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><title>Options Lab · TWS</title><link rel="preload" as="font" type="font/woff2" href="/fonts/Inter-latin.woff2" crossorigin><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/options-history.css"><script type="module" src="/app.js"></script></head>
+<body><header><div class="brand"><span class="brandmark" aria-hidden="true"></span><span>Options<span class="brand-light">Lab</span></span></div><nav aria-label="Workspace">
+<button data-page="build" class="active" aria-haspopup="true">Build <span class="chev">▾</span></button><button data-page="optimize">Optimize</button><button data-page="activity">Flow <span class="chev">▾</span></button><button data-page="saved">Saved</button></nav><span id="connection" class="pill">Connecting</span></header>
+<aside id="buildMenu" popover="auto" aria-label="Strategy templates"></aside><main><div id="message" role="status" hidden></div>
+<section id="marketControls"><div class="heading"><div><div class="eyebrow" id="marketLabel">TWS strategy builder</div><div class="strategy-picker"><h1 id="h1">Long Call</h1><span class="chev">▾</span><select id="template" aria-label="Strategy template"></select></div></div><div class="actions"><button id="addLeg" popovertarget="addMenu" aria-haspopup="menu" aria-controls="addMenu">Add +</button><button id="positions" aria-haspopup="dialog" aria-controls="legsPanel">Positions (1)</button><button id="save" class="primary">Save trade</button><button id="topHistory">Historical chart</button></div></div>
+<div class="instrument"><form id="symbolForm" role="search">
+ <input id="symbol" value="SPX" role="combobox" aria-label="Underlying symbol" aria-controls="tickerList" aria-expanded="false" aria-autocomplete="list" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="80" placeholder="Search…">
+ <div id="tickerMenu" hidden><div id="tickerFamily" hidden></div><ul id="tickerList" role="listbox" aria-label="Matching TWS contracts"></ul><div id="tickerStatus" role="status" hidden></div></div>
+</form>
+<div class="reference"><strong id="spot">—</strong><span id="spotChange" hidden><span></span><span></span></span><span id="spotSource">Underlying reference</span></div><span id="listingLabel" class="listing"></span><label id="classControl">Class <select id="root"></select></label><label>Feed <select id="feed"><option value="1">Live</option><option value="2">Frozen fallback</option><option value="3">Delayed fallback</option><option value="4">Delayed frozen fallback</option></select></label></div>
+<div id="optionRails"><div class="rail-label"><b>Expiration</b><span id="expiryText"></span></div><div id="expiries" class="expiries" aria-label="Available expirations"></div>
+<div class="rail-label"><b>Strike</b><span id="railHint" title="Click to inspect. Drag one leg to move it. Hold Shift while dragging the rail or its slider to move all open strikes. Shift-drag a butterfly or condor wing to move its opposite.">Shift-drag rail to move all · Shift-drag paired legs to resize</span><label class="rail-volume-toggle" title="Show reported TWS call and put volume at each strike"><input type="checkbox" id="railVolume" aria-controls="strikeVolumes">Volume</label><div class="rail-nav"><button id="left" aria-label="Lower strikes">‹</button><button id="right" aria-label="Higher strikes">›</button></div></div><div id="strikes" class="strikes" aria-label="Strike selector" aria-describedby="railHint"></div><div id="strikeVolumes" class="strike-volumes" role="group" aria-label="TWS contract volume by strike, green calls and red puts" hidden></div><input id="strikePan" type="range" aria-label="Browse full strike ladder" aria-describedby="railHint" min="0" max="1" value="0"></div></section>
+<section id="quoteOnly" class="card" hidden><h2>Underlying quote</h2><p id="noOptions"></p><div class="greeks" id="underlyingQuote"></div></section>
+<section id="build" class="page">
+<svg width="0" height="0" aria-hidden="true" focusable="false" class="metric-symbols"><defs>
+ <symbol id="stat-coins" viewBox="0 0 24 24">
+  <g fill="currentColor" opacity=".45"><ellipse cx="16" cy="5" rx="7" ry="3"/><path d="M9 7c3.5 2.6 10.5 2.6 14 0v3c-3.5 2.6-10.5 2.6-14 0zm0 5c3.5 2.6 10.5 2.6 14 0v3c-3.5 2.6-10.5 2.6-14 0z"/></g>
+  <g fill="currentColor"><ellipse cx="9" cy="11" rx="8" ry="3.5"/><path d="M1 13.8c4 3.1 12 3.1 16 0v2.8c-4 3.1-12 3.1-16 0zm0 5c4 3.1 12 3.1 16 0v2.4c-4 3.1-12 3.1-16 0z"/></g>
+ </symbol>
+ <symbol id="stat-arrow" viewBox="0 0 24 24"><path d="M12 22V2m-6 6 6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="stat-dice" viewBox="0 0 24 24"><g fill="currentColor"><rect x="10" y="10" width="13" height="13" rx="3"/><rect x="3" y="3" width="13" height="13" rx="3" transform="rotate(-42 9.5 9.5)" opacity=".62"/></g><g fill="#040421"><circle cx="14" cy="14" r="1.15"/><circle cx="19" cy="19" r="1.15"/></g><g fill="#fff"><circle cx="6" cy="10" r="1"/><circle cx="9.5" cy="9.5" r="1"/><circle cx="13" cy="9" r="1"/></g></symbol>
+ <symbol id="stat-bag" viewBox="0 0 24 24"><path fill="currentColor" d="m7 2 4 1 2-1 4 1-3 5c3 3 7 7 7 11 0 3-4 4-9 4s-9-1-9-4c0-4 4-8 7-11z"/><path d="M15 12c-4-2-6 1-4 3l2 1c3 1 1 5-3 3m2-9v11" fill="none" stroke="#040421" stroke-width="1.3" stroke-linecap="round"/></symbol>
+</defs></svg>
+<div id="metricStrip" role="region" aria-label="Strategy metrics and Greeks" tabindex="0">
+ <button type="button" id="statPrev" class="stat-nav" aria-label="Previous metrics page" aria-controls="statTrack"></button>
+ <div class="stat-viewport"><div id="statTrack"><div class="stats-row" id="metrics" aria-label="Strategy metrics"></div><div class="stats-row" id="greeks" aria-label="Position Greeks" aria-hidden="true" inert></div></div></div>
+ <button type="button" id="statNext" class="stat-nav" aria-label="Next metrics page" aria-controls="statTrack"></button>
+</div>
+<div class="chart-card"><div class="chart-head"><h2 id="chartTitle" class="sr-only">Payoff graph</h2><div class="plot-key"><span id="plotLegend">At expiration</span></div></div>
+<div id="graph"><canvas id="riskCanvas" tabindex="0" aria-describedby="hover" role="img" aria-label="Strategy payoff graph"></canvas><div id="hover" class="sr-only" role="tooltip"></div></div>
+<div id="heatTable" class="scroll" hidden></div>
+<div id="historyPanel" hidden><div class="row"><label>History <select id="historyType"><option value="session">Live marks this session</option><option value="market">TWS historical bars</option><option value="liveCandles">Contract candles · live midpoints</option><option value="bars">Contract candles · TWS history</option><option value="saved">Recorded saved marks</option></select></label><label>Window <select id="historyWindow"><option>1D</option><option selected>5D</option><option>1M</option><option>3M</option></select></label><button id="fetchHistory">Load history</button></div><canvas id="histCanvas" role="img" aria-label="Historical strategy P&L"></canvas><p id="historyNote"></p></div>
+<div class="scenarios" id="scenarios">
+ <div class="date scenario-control" id="dateControl">
+  <div class="scenario-heading"><label for="horizon" title="Eastern time">Date: <strong id="dateLabel">Expiration</strong></label><span id="plotDateState"></span></div>
+  <div class="scenario-track" id="dateTrack"><input type="range" id="horizon" aria-label="Scenario date" min="0" max="100" step="any" value="100"><output id="dateTooltip" aria-hidden="true"></output></div>
+ </div>
+ <div class="scenario-control" id="rangeControl">
+  <div class="scenario-heading"><label for="zoom">Range: <strong id="zoomLabel">±5%</strong></label><button type="button" class="scenario-action" id="setChartTarget" aria-label="Set target price" title="Target price"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15.2 6.5a7.3 7.3 0 1 1-4-2.8M12.9 8.5a4.3 4.3 0 1 1-3-1.8M9.3 11l6.1-6.1"/><path d="m14.2 4.4 1-2.1.8 2.1 2 .8-2.1 1z"/></g></svg></button></div>
+  <div class="scenario-track"><input type="range" aria-label="Chart range" id="zoom" min="1" max="35" step="0.01" value="5"></div>
+ </div>
+ <div class="scenario-control" id="ivControl">
+  <div class="scenario-heading"><label for="iv">Implied Volatility: <strong id="ivLabel">—</strong></label><button type="button" class="scenario-action" id="resetIv" aria-label="Reset IV to one times" title="Reset IV multiplier to one" hidden>↶</button></div>
+  <div class="scenario-track"><input type="range" aria-label="Implied volatility multiplier" id="iv" min="0.1" max="3" step="0.001" value="1"><output id="ivDelta" aria-hidden="true"></output></div>
+  <div class="iv-marks" aria-label="IV multipliers"><button type="button" data-factor="1" style="--tick:31.03448%" aria-label="Set IV to one times">×1</button><button type="button" data-factor="2" style="--tick:65.51724%" aria-label="Set IV to two times">×2</button><button type="button" data-factor="3" style="--tick:100%" aria-label="Set IV to three times">×3</button></div>
+ </div>
+</div>
+<div class="chart-controls"><div class="seg view-controls"><button data-view="table"><svg class="view-icon" viewBox="0 0 18 16" aria-hidden="true"><rect x="2" y="2" width="14" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 7h14M7 7v7" stroke="currentColor" stroke-width="2"/></svg>Table</button><button data-view="graph" class="active"><svg class="view-icon" viewBox="0 0 18 16" aria-hidden="true"><path d="M2 2v12h15" fill="none" stroke="currentColor" stroke-width="2"/><path d="m5 9 4-5 3 3 2-2 3 3v3H5z" fill="currentColor"/></svg>Graph</button><button data-view="history" hidden>History</button></div>
+<div class="unit-controls"><div class="seg"><button data-unit="usd" class="active">Profit / Loss $</button><button data-unit="percent">Profit / Loss %</button><button data-unit="value">Contract Value</button><button data-unit="riskPercent">% of Max Risk</button></div><details id="modelSettings"><summary>More</summary>
+<div class="model-menu"><fieldset class="greek-selector" id="greekSelector"><legend class="sr-only">Scenario Greeks</legend>
+<button type="button" data-unit="delta">Delta <span class="greek-delta" aria-hidden="true">Δ</span></button>
+<button type="button" data-unit="theta">Theta <span class="greek-theta" aria-hidden="true">Θ</span></button>
+<button type="button" data-unit="gamma">Gamma <span class="greek-gamma" aria-hidden="true">Γ</span></button>
+<button type="button" data-unit="vega">Vega <span class="greek-vega" aria-hidden="true">ν</span></button>
+<button type="button" data-unit="rho">Rho <span class="greek-rho" aria-hidden="true">ρ</span></button></fieldset>
+<div id="calendarOptions" hidden><label><input type="checkbox" id="showEvents" checked> Earnings and ex-dividend dates</label><span id="eventCoverage"></span></div><div id="markSummary"></div><div class="model-inputs"><label>Annual rate (%) <input type="number" id="rate" min="-5" max="50" step="0.1" value="0"></label><label>Target price <input id="targetPrice" type="number" min="0" step="any" placeholder="Underlying level"></label><button id="share" title="Copy a self-contained local builder link">Copy strategy link</button></div></div></details></div></div>
+<div id="scenarioNote" class="note"></div></div>
+<details id="chainPanel" class="card"><summary>Option chain <span id="chainCount"></span></summary><div class="scroll" id="chainGrid"></div></details></section>
+<section id="optimize" class="page card" hidden><div class="eyebrow">Quoted strikes</div><h2>Strategy optimizer</h2><p class="note">Optimizer rankings use quoted premiums before commissions.</p><div class="filters"><label>Strategy family<select id="family"><option value="vertical">Vertical spreads</option><option value="templates">Multi-leg templates</option></select></label><label>Target price <input id="optTarget" type="number" min="0" step="any"></label><label>Value at <select id="optHorizon"><option value="expiration">Expiration</option><option value="date">Target date and time</option></select></label><label id="optDateLabel" hidden><span id="optZone">Target date and time</span> <input id="optDate" type="datetime-local" step="60"></label><label>Direction <select id="direction"><option value="both">Both</option><option value="bullish">Bullish</option><option value="bearish">Bearish</option></select></label><label>Premium <select id="funding"><option value="both">Debit or credit</option><option value="debit">Debit</option><option value="credit">Credit</option></select></label><label><span id="optRiskCurrency">Max loss</span> <input id="lossLimit" min="0" type="number" placeholder="Any"></label><label>Entry pricing <select id="optPricing"><option value="natural">Bid / ask</option><option value="mid">Midpoint</option></select></label><label>Rank by <select id="rank"><option value="targetPnL">Target P&amp;L</option><option value="returnOnRisk">Return on risk</option><option value="maxLoss">Lowest max loss</option></select></label><button id="scan" class="primary">Compare strategies</button></div><p id="optNote">Choose a target price and compare the quoted strikes in view.</p><div class="scroll" id="optGrid"></div></section>
+<section id="activity" class="page card" hidden><div class="eyebrow">TWS market data</div><h2>Options flow and market activity</h2><div class="tabs"><button data-activity="updates" class="active">Subscribed options</button><button data-activity="tape">Time &amp; sales</button><button data-activity="events">Corporate events</button><button data-activity="scanner">US stock scanner</button><button data-activity="news">News</button></div><div id="activityTools" class="filters"></div><p id="activityNote"></p><div class="scroll" id="activityBody"></div></section>
+<section id="saved" class="page saved-page" aria-labelledby="savedTitle" hidden>
+ <h1 id="savedTitle">Saved Trades</h1>
+ <div class="saved-toolbar">
+  <div class="saved-group-control"><label>Group: <select id="savedGroup"><option value="">All</option></select></label><button id="savedAddGroup" title="Create a group" aria-label="Create a group">+</button></div>
+  <label>Sort by: <select id="savedSort"><option value="created">Date created</option><option value="symbol" selected>Symbol</option><option value="expiry">Expiration</option><option value="name">Name</option></select></label>
+  <label>Show: <select id="savedShow"><option value="active">Active</option><option value="archived">Expired or Closed</option><option value="all">All trades</option></select></label>
+  <button id="savedEdit" class="saved-primary">Edit List</button>
+  <div class="saved-file-actions" id="savedExportActions"><button id="savedImportButton" title="Import an Options Lab JSON library">Import</button><input id="import" type="file" accept=".json" hidden><button id="export" class="saved-primary" title="Export your local library as JSON">Export <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1v9m-3-3 3 3 3-3M2 10v3.5h12V10"/></svg></button></div>
+  <button id="savedDeleteSelected" hidden>Delete Selected (0)</button><button id="savedCancelEdit" class="saved-primary" hidden>Cancel</button>
+ </div>
+ <div class="scroll" id="library"></div>
+ <p id="savedFeed" role="status"></p>
+ <section id="optionsHistoryPanel" aria-labelledby="optionsHistoryTitle" hidden>
+  <div class="options-history-title">
+   <h2 id="optionsHistoryTitle">Options History</h2>
+   <div class="options-history-views" role="group" aria-label="Broker history view">
+    <button type="button" id="optionsHistoryTrades" aria-pressed="true">Trades</button>
+    <button type="button" id="optionsHistoryActivity" aria-pressed="false">Executions &amp; lifecycle</button>
+   </div>
+  </div>
+  <div class="options-history-filters">
+   <label id="optionsHistoryTradeStatusLabel">Trade status<select id="optionsHistoryTradeStatus"><option value="closed">Expired or closed</option><option value="all">All trades</option><option value="open">Open</option><option value="incomplete">Incomplete history</option></select></label>
+   <label id="optionsHistoryContractLabel" hidden>Broker contract status<select id="optionsHistoryContract"><option value="archived">Expired or closed</option><option value="all">All option contracts</option></select></label>
+   <label>Ticker<input id="optionsHistoryTicker" type="search" placeholder="All tickers" autocomplete="off" spellcheck="false"></label>
+   <label><span id="optionsHistoryFromLabel">Closed from</span><input id="optionsHistoryFrom" type="date"></label>
+   <label><span id="optionsHistoryToLabel">Through</span><input id="optionsHistoryTo" type="date"></label>
+   <button type="button" id="optionsHistoryClear" hidden>Clear filters</button>
+   <button type="button" id="optionsHistoryRefresh">Refresh</button>
+   <button type="button" id="optionsFlexOpen">Import Activity Flex XML</button>
+  </div>
+  <div id="historyGroupTools">
+   <button type="button" id="historyGroupStart" disabled>Group as spread</button>
+   <div id="historyGroupSelection" hidden>
+    <p>Select fills or whole trades from the spread. The preview includes the matching opening and closing quantities.</p>
+    <p id="historyGroupRawHint" hidden>Choose All option contracts to include fills from contracts that are currently open.</p>
+    <div class="history-group-inputs">
+     <span id="historyGroupCount">0 selected</span>
+     <label>Spread name <input id="historyGroupName" type="text" placeholder="Optional" autocomplete="off"></label>
+     <button type="button" id="historyGroupPreview" class="saved-primary" disabled>Preview spread</button>
+     <button type="button" id="historyGroupCancel">Cancel</button>
+    </div>
+    <details id="historyGroupSelected" hidden><summary>Selected trades and fills</summary><ul id="historyGroupSelectedList"></ul></details>
+   </div>
+   <p id="historyGroupMessage" role="status" aria-live="polite"></p>
+   <div id="historyGroupReview"></div>
+  </div>
+  <dialog id="historyGroupDialog" aria-labelledby="historyGroupDialogTitle">
+   <h2 id="historyGroupDialogTitle">Spread preview</h2>
+   <div id="historyGroupPreviewBody"></div>
+   <p id="historyGroupSaveMessage" role="alert" hidden></p>
+   <div class="actions"><button type="button" id="historyGroupBack">Back</button><button type="button" id="historyGroupSave" class="saved-primary">Save spread</button></div>
+  </dialog>
+  <dialog id="historyUngroupDialog" aria-labelledby="historyUngroupTitle">
+   <h2 id="historyUngroupTitle">Ungroup spread</h2>
+   <p id="historyUngroupCopy"></p><p id="historyUngroupError" role="alert" hidden></p>
+   <div class="actions"><button type="button" id="historyUngroupBack">Cancel</button><button type="button" id="historyUngroupConfirm" class="saved-primary">Ungroup spread</button></div>
+  </dialog>
+  <p id="optionsHistoryCoverage"></p>
+  <p id="optionsHistoryStatus" role="status"></p>
+  <p id="optionsHistoryMatchNote" hidden>Saved-trade matches identify trades with the same option contract.</p>
+  <div id="optionsFlexResult" role="status" hidden></div>
+  <div id="optionsHistoryTable" class="scroll"></div>
+  <div id="optionsHistoryPages" hidden></div>
+  <dialog id="optionsFlexDialog" aria-labelledby="optionsFlexTitle">
+   <form id="optionsFlexForm">
+    <h2 id="optionsFlexTitle">Import Activity Flex statements</h2>
+    <p>Choose one or more IBKR Activity Flex XML files. Options Lab processes them on this computer.</p>
+    <label>Activity Flex XML files<input id="optionsFlexFiles" type="file" accept=".xml,application/xml,text/xml" multiple required></label>
+    <label>Statement time zone<input id="optionsFlexZone" type="text" value="America/New_York" list="optionsFlexZones" autocomplete="off" required></label>
+    <datalist id="optionsFlexZones"></datalist>
+    <label class="flex-check"><input id="optionsFlexVerify" type="checkbox">Verify a trading day’s saved returns</label>
+    <div id="optionsFlexVerification" hidden>
+     <label>Trading date<input id="optionsFlexDate" type="date"></label>
+     <p>Include daily statements for the previous and selected trading dates.</p>
+     <label class="flex-check"><input id="optionsFlexUnfiltered" type="checkbox">I confirm these daily reports include all assets, executions and positions without filters.</label>
+    </div>
+    <p id="optionsFlexError" role="alert" hidden></p>
+    <div class="actions"><button id="optionsFlexCancel" type="button">Cancel</button><button id="optionsFlexSubmit" class="saved-primary" type="submit">Import XML</button></div>
+   </form>
+  </dialog>
+ </section>
+</section>
+<footer><span id="footStatus">Local TWS connection</span><span id="currencyNote">Contract currency</span></footer></main>
+<div id="addMenu" popover="auto" role="menu" aria-label="Add an option">
+ <strong>Options:</strong>
+ <button role="menuitem" data-side="1" data-right="C">Buy <span class="call">Call</span></button>
+ <button role="menuitem" data-side="-1" data-right="C">Sell <span class="call">Call</span></button>
+ <button role="menuitem" data-side="1" data-right="P">Buy <span class="put">Put</span></button>
+ <button role="menuitem" data-side="-1" data-right="P">Sell <span class="put">Put</span></button>
+</div>
+<dialog id="savedTradeDetails" aria-label="Saved trade details"></dialog>
+<dialog id="legsPanel" aria-labelledby="positionsTitle">
+ <header class="position-head"><h2 id="positionsTitle">Positions</h2><button id="closeLegs" aria-label="Close positions">×</button></header>
+ <div class="position-segments" aria-label="Position status"><button id="openPositions" aria-pressed="true">Open (0)</button><button id="closedPositions" aria-pressed="false">Closed (0)</button></div>
+ <p id="positionSummary"></p>
+ <div id="legs"></div>
+ <div id="positionTools">
+  <h3>Actions:</h3><div class="position-actions"><button id="flipPositions">Flip Positions</button><button id="resetPrices">Reset Custom Prices</button></div>
+  <h3>Pricing Mode: <abbr title="Midpoint uses the midpoint for entry. Bid / Ask buys at the ask and sells at the bid. Manually entered prices stay fixed.">?</abbr></h3><div class="position-segments" aria-label="Entry pricing mode"><button data-position-pricing="mid" aria-pressed="true">Midpoint</button><button data-position-pricing="natural" aria-pressed="false">Bid / Ask</button></div>
+ </div>
+ <div class="position-commission"><h3>Commissions <output id="commissionTotal"></output></h3>
+  <label for="commissionRate">Per option contract, per side (<span id="commissionCurrency">USD</span>)</label>
+  <input id="commissionRate" type="number" inputmode="decimal" min="0" max="9007199254740991" step="any" value="0" aria-describedby="commissionRule">
+  <p id="commissionRule">P&amp;L includes an opening fee for each included option and a closing fee for each recorded close. Open scenarios assume no additional exit fee. Shares are fee-free.</p>
+ </div>
+ <div id="positionError" role="status" hidden></div>
+</dialog>
+<section id="legBubble" popover="auto" role="dialog" aria-labelledby="bubbleTitle">
+ <div class="strike-pop-head"><h3 id="bubbleTitle">Option leg</h3><button id="bubbleClose" aria-label="Close strike popup" title="Close">×</button></div>
+ <div id="bubbleStatus" class="strike-pop-status" hidden></div>
+ <div class="strike-edit-pair">
+  <div><span>Quantity</span><div class="strike-value">
+   <button id="qtyDown" class="quantity-arrow" aria-label="Decrease quantity">‹</button>
+   <button id="editQty" class="editable-value" aria-label="Edit leg quantity"></button>
+   <input id="bubbleQty" aria-label="Leg quantity" type="number" step="1" hidden>
+   <button id="qtyUp" class="quantity-arrow" aria-label="Increase quantity">›</button>
+  </div></div>
+  <div><span>Price</span><div class="strike-value">
+   <button id="editPrice" class="editable-value" aria-label="Edit leg price" title="Price used as this leg’s entry"></button>
+   <input id="bubbleEntry" aria-label="Leg price" type="number" step="any" min="0" hidden>
+  </div></div>
+ </div>
+ <dl id="bubbleMarket" class="strike-market"></dl>
+ <div class="strike-commands">
+  <button id="applyStrike" hidden><span aria-hidden="true">✓</span><span id="applyStrikeLabel">Use this strike</span></button>
+  <button id="flipRight"><span aria-hidden="true">⇄</span><span>Switch to <b id="switchRightName"></b></span></button>
+  <button id="flipSide"><span aria-hidden="true">↔</span><span id="switchSideName"></span></button>
+  <button id="beginClose"><span aria-hidden="true">✓</span><span id="closeVerb"></span></button>
+  <form id="closeForm" hidden>
+   <div class="close-inputs"><label>Closing Price<input id="closingPrice" type="number" min="0" step="any" required></label>
+   <label>Closing Quantity<span class="close-steps"><button id="closeQtyDown" type="button" aria-label="Decrease closing quantity">‹</button><input id="closingQty" aria-label="Closing Quantity" inputmode="numeric" required><button id="closeQtyUp" type="button" aria-label="Increase closing quantity">›</button></span></label></div>
+   <div class="close-controls"><button id="confirmClose" type="submit"></button><button id="cancelClose" type="button">Cancel</button></div>
+   <div id="closeError" role="alert" hidden></div>
+  </form>
+  <button id="undoClose" hidden><span aria-hidden="true">↶</span><span>Undo Last Close</span></button>
+  <label class="expiry-command"><span aria-hidden="true">▦</span><span>Change Expiration</span><select id="bubbleExpiry" aria-label="Change leg expiration"></select></label>
+  <button id="useMid"><span aria-hidden="true">◎</span><span>Use Midpoint</span></button>
+  <button id="excludeLeg" aria-pressed="false"><span aria-hidden="true" class="exclude-eye"></span><span id="excludeLabel">Exclude</span></button>
+  <button id="bubbleRemove"><span aria-hidden="true">×</span><span>Remove</span></button>
+ </div>
+</section>
+<dialog id="chartTargetDialog" aria-labelledby="targetHeading"><form id="chartTargetForm"><h2 id="targetHeading">Target Price</h2><p>Enter a target price to highlight it on the table and graph.</p><label>Target <input type="number" step="any" id="targetDraft" required></label><div class="actions"><button type="submit">Set Target</button><button type="button" id="clearTarget">Clear Target</button><button type="button" id="cancelTarget">Cancel</button></div></form></dialog>
+<dialog id="dialog"><form method="dialog"><h2 id="dialogTitle"></h2><div id="dialogBody"></div><div class="actions"><button value="cancel">Cancel</button><button value="ok" id="dialogOk" class="primary">Save</button></div></form></dialog>
+<dialog id="archiveTrade" aria-labelledby="archiveTitle"><form method="dialog"><h2 id="archiveTitle"></h2><p id="archiveSummary"></p><div id="archiveFills" class="scroll"></div><p class="note">Archived option contracts have no TWS price history in this library. Realized P&amp;L uses the saved fills and commissions.</p><div class="actions"><button class="primary" value="close">Close</button></div></form></dialog>
+</body></html>

@@ -1,0 +1,26 @@
+[package]
+name = "tws-options-lab"
+version = "0.1.0"
+edition = "2024"
+description = "Local options strategy analysis and trade history powered by Interactive Brokers Trader Workstation"
+repository = "https://github.com/Acelogic/TWSOptionsLab"
+readme = "README.md"
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10"
+futures-util = "0.3"
+hmac = "0.12"
+ibapi = "=5.7.0"
+roxmltree = "0.21"
+rust_decimal = { version = "1", default-features = false, features = ["std"] }
+rusqlite = { version = "0.37", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+time = { version = "0.3", features = ["macros","formatting","parsing"] }
+time-tz = "2"
+tokio = { version = "1", features = ["full"] }
+uuid = { version = "1", features = ["v4","v5"] }

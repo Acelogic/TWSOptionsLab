@@ -1,0 +1,30 @@
+# Local broker data, account exports, and credentials
+.data/
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.xml
+*.csv
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+options-lab-strategies.json
+
+# Build and verification output
+/target/
+/artifacts/
+/outputs/
+/work/
+*.log
+__pycache__/
+*.pyc
+.ruff_cache/
+.venv/
+node_modules/
+.DS_Store

@@ -1,0 +1,88 @@
+#optionsHistoryPanel {margin-top:24px; padding-top:18px; border-top:1px solid #263859}
+#optionsHistoryTitle {margin:0 0 14px; font:600 23px/1.15 Montserrat,var(--sans)}
+.options-history-filters {display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-bottom:12px}
+.options-history-filters label {display:inline-flex; align-items:center; gap:6px; color:var(--fg); font-size:14px}
+.options-history-filters :is(input,select) {height:29px; box-sizing:border-box; border:1px solid #62738a; border-radius:5px; background:#020217; color:#f5f7ff; padding:2px 6px; font:14px var(--sans)}
+#optionsHistoryTicker {width:120px}
+.options-history-filters button,#optionsHistoryPages button {min-height:28px; padding:4px 10px; border-radius:5px; font:600 13px var(--sans)}
+#optionsHistoryRefresh {margin-left:auto}
+#optionsHistoryCoverage,#optionsHistoryStatus,#optionsHistoryMatchNote {margin:7px 0; line-height:1.45; font-size:13px; color:#b2c0d5}
+#optionsHistoryCoverage:empty,#optionsHistoryStatus:empty {display:none}
+#optionsHistoryTable {margin-top:13px}
+.options-history-table {width:100%; border-collapse:collapse; font:14px/1.35 var(--sans)}
+.options-history-table :is(th,td) {padding:9px 10px; text-align:left; white-space:nowrap; border:none}
+.options-history-table th {font-weight:650; color:#d8e8fb; background:#0c203e; position:sticky; top:0}
+.options-history-table tbody tr {border-bottom:1px solid #19355a}
+.options-history-table tbody tr:hover {background:#101c32}
+.options-history-table .numeric {text-align:right; font-variant-numeric:tabular-nums}
+.options-history-table small {display:block; color:#abbcd3; font-size:12px}
+.options-history-table .buy {color:#9cdbb2}
+.options-history-table .sell {color:#f0adb1}
+.options-history-table .saved-link {padding:0; border:0; background:transparent; color:#9ed4ff; text-align:left; font:inherit; text-decoration:underline}
+.options-history-empty {margin:16px 0; color:#c4cde1}
+#optionsHistoryPages {display:flex; align-items:center; justify-content:flex-end; gap:9px; margin-block:12px; color:#aebcd1; font-size:13px}
+@media(max-width:760px){
+ #optionsHistoryPanel {margin-top:16px}
+ .options-history-filters {gap:8px}
+ .options-history-table :is(th,td) {padding:7px}
+}
+#optionsFlexDialog {max-width:min(480px,90vw); color:var(--fg)}
+#optionsFlexForm {display:grid; gap:12px; min-width:0}
+#optionsFlexForm h2 {margin:0; font-size:21px}
+#optionsFlexForm p,#optionsFlexResult {margin:0; font-size:13px; color:#b2c0d5; line-height:1.45}
+#optionsFlexForm label {display:grid; gap:5px; font-size:14px}
+#optionsFlexForm input:not([type=checkbox]) {box-sizing:border-box; width:100%}
+#optionsFlexForm .flex-check {display:flex; align-items:flex-start; gap:6px}
+#optionsFlexForm .flex-check input {flex:none; width:15px; height:15px; margin:1px 2px 0 0}
+#optionsFlexVerification {display:grid; gap:9px; border-left:2px solid #34577c; padding-left:12px}
+#optionsFlexForm .actions {justify-content:flex-end}
+#optionsFlexForm #optionsFlexError {color:#f2a3ae}
+#optionsFlexResult {margin:10px 0; border-left:2px solid #3e7998; padding-left:10px}
+#optionsFlexResult details {margin-top:3px}
+#optionsFlexResult ul {margin:3px 0; padding-left:18px}
+.options-history-title {display:flex; align-items:center; flex-wrap:wrap; gap:12px 22px; margin-bottom:12px}
+.options-history-title h2 {margin:0}
+.options-history-views {display:inline-flex; padding:2px; gap:1px; border:1px solid #284567; border-radius:6px; background:#0a152b}
+.options-history-views button {padding:5px 11px; border:0; border-radius:4px; color:#c4d0e1; background:transparent; font:600 13px var(--sans)}
+.options-history-views button[aria-pressed=true] {color:#e9f4ff; background:#234267}
+#optionsHistoryPanel .options-history-filters [hidden] {display:none}
+.options-history-table .history-trade-button {display:flex; align-items:center; gap:8px; padding:0; border:0; background:transparent; color:#a7d4ff; text-align:left; font:600 15px var(--sans)}
+.history-trade-button::before {content:'▸'; font-size:14px; color:#9cb3d0}
+.history-trade-button[aria-expanded=true]::before {content:'▾'}
+.history-trade-button small {font-weight:400; color:#e2ebf3}
+.options-history-table td.history-group-detail {padding:13px 16px; white-space:normal; background:#0b172b}
+.history-group-detail h3 {margin:12px 0 5px; color:#d6e5f5; font-size:14px}
+.history-group-detail p {margin:4px 0; color:#bfcbda; font-size:13px}
+.history-group-detail .history-group-audit {margin:3px 0 10px; overflow:auto; contain:inline-size}
+.history-group-detail .history-group-audit table {width:max-content; min-width:min(100%,600px); font-size:13px; line-height:1.3; border-collapse:collapse}
+.history-group-detail .history-group-audit :is(th,td) {padding:5px 9px; white-space:nowrap}
+.history-group-detail .history-group-audit th {position:static; background:#162c45}
+.history-group-detail .history-group-audit tr {border-bottom:1px solid #26405c}
+.history-group-detail .history-source {color:#d5e2f1}
+.history-trade-missing {max-width:280px; white-space:normal}
+#historyGroupTools {margin:12px 0 8px; color:#d6e3f2}
+#historyGroupTools button,#historyGroupDialog button,#historyUngroupDialog button {font:600 13px var(--sans); padding:5px 10px; border-radius:5px}
+#historyGroupSelection {padding:9px 12px; border-left:2px solid #4878aa; background:#0b1a30}
+#historyGroupSelection p,#historyGroupMessage,#historyGroupReview p {margin:5px 0; font-size:13px; line-height:1.5}
+#historyGroupMessage:empty,#historyGroupReview:empty {display:none}
+.history-group-inputs {display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px}
+.history-group-inputs label {display:inline-flex; align-items:center; gap:6px; font-size:13px}
+#historyGroupName {max-width:175px}
+#historyGroupCount {font-size:13px; color:#b9d4ee}
+#historyGroupSelected {font-size:13px; margin-top:8px}
+#historyGroupSelected ul {padding-left:16px; max-height:125px; overflow:auto}
+#historyGroupSelected li {margin:4px 0}
+#historyGroupSelected .history-selection-remove {margin-left:9px; padding:2px 6px; font-weight:400}
+.history-select-cell {width:1px}
+.history-select-cell label {display:flex; align-items:center; gap:5px; margin:2px 0; font-size:12px; color:#d0e1ee}
+.history-select-cell input {width:15px; height:15px; margin:0}
+.history-select-cell span {color:#a7b9cd; font-size:11px}
+.history-group-undo {margin-top:10px}
+#historyGroupDialog {width:min(860px,92vw); max-height:86vh; overflow:auto; color:var(--fg)}
+#historyUngroupDialog {width:min(420px,90vw); color:var(--fg)}
+:is(#historyGroupDialog,#historyUngroupDialog) h2 {margin:0 0 12px; font-size:21px}
+:is(#historyGroupDialog,#historyUngroupDialog) .actions {display:flex; gap:9px; justify-content:flex-end; margin-top:14px}
+#historyGroupSaveMessage,#historyUngroupError {color:#f2a3ae}
+#historyGroupPreviewBody .history-preview-total {font:600 19px var(--sans); margin:6px 0}
+#historyGroupPreviewBody .history-group-detail {display:block; padding:0; background:transparent}
+#historyGroupPreviewBody .history-group-audit table {min-width:100%}
