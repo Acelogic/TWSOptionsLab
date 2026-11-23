@@ -195,4 +195,9 @@ try{
 }catch(e){
  if(browser)console.error('Last visible graph:',await browser.evalPage('({canvas:document.getElementById("riskCanvas")?.getAttribute("aria-label"),date:document.getElementById("dateLabel")?.innerText,note:document.getElementById("scenarioNote")?.innerText,iv:document.getElementById("ivLabel")?.innerText,msg:document.getElementById("message")?.innerText})').catch(()=>null));
  throw e;
-}finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));await rm(profile,{recursive:true,force:true})}
+}finally{
+ if(browser)await browser.close();
+ await new Promise(resolve=>server.close(resolve));
+ // Chrome helper processes can finish writing the temporary profile after the browser exits.
+ await rm(profile,{recursive:true,force:true,maxRetries:5,retryDelay:150});
+}
